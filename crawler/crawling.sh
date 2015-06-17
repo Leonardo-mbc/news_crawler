@@ -1,1 +1,0 @@
-/usr/local/bin/php /home/leonardo/www/crawler/main.php h

@@ -6,9 +6,16 @@
 	require_once $loc."lib/rss_fetch.inc";
 
 	$url = "https://news.google.com/news?hl=ja&ie=UTF-8&oe=UTF-8&output=rss&num=100&topic=$tpc";
-	$rss = mb_convert_encoding(curl_get($url), "UTF-8");
+	$curl_result = curl_get($url);
+
+	$result = $db->prepare("INSERT INTO crawling_log (response_code) VALUES(?)");
+	$result->bind_param('i', $curl_result['http_code']);
+	$result->execute();
+	$result->close();
+
+	$rss = mb_convert_encoding($curl_result["body"], "UTF-8");
 	$rss = new MagpieRSS($rss);
-	$items = array_slice($rss->items, 0, $num_items);
+	$items = $rss->items;
 
 	foreach($items as $item)
 	{
@@ -33,7 +40,8 @@
 
 		do
 		{
-			$page_html = curl_get("http://news.google.com/news/story?cf=all&hl=ja$ned&topic=$tpc&ncl=$topic_id&start=".($start*30));
+		    $curl_result = curl_get("http://news.google.com/news/story?cf=all&hl=ja$ned&topic=$tpc&ncl=$topic_id&start=".($start*30));
+			$page_html = $curl_result['body'];
 			$start += 1;
 			$dom = new simple_html_dom();
 			$dom->load($page_html);
@@ -44,6 +52,12 @@
 				$anchor = $story->find('a');
 				$source = $story->find('span[class^=source]');
 				$url = parse_url($anchor[0]->href);
+
+				$ins_title = $title[0]->plaintext;
+				$ins_source = html_to_utf8($source[0]->plaintext);
+				$ins_url = $anchor[0]->href;
+				$ins_host = $url['host'];
+
 				#echo $title[0]->plaintext.$endl;	#記事タイトル
 				#echo $anchor[0]->href.$endl;		#記事リンク
 				#echo html_to_utf8($source[0]->plaintext).$endl;	#ニュースサイト名
@@ -51,13 +65,15 @@
 				#echo $endl;
 
 				$result = $db->prepare("INSERT INTO news (topic_id, name, source, url, host) SELECT ?, ?, ?, ?, ? FROM dual WHERE NOT EXISTS (SELECT id FROM news WHERE name = ? AND url = ?)");
-				$result->bind_param('sssssss', $topic_id, $title[0]->plaintext, html_to_utf8($source[0]->plaintext), $anchor[0]->href, $url['host'], $title[0]->plaintext, $anchor[0]->href);
+				$result->bind_param('sssssss', $topic_id, $ins_title, $ins_source, $ins_url, $ins_host, $ins_title, $ins_url);
 				$result->execute();
+				#echo $result->error.$endl;
 				$result->close();
 
 				$result = $db->prepare("INSERT INTO crawlers (host) SELECT ? FROM dual WHERE NOT EXISTS (SELECT id FROM crawlers WHERE host = ?)");
 				$result->bind_param('ss', $url['host'], $url['host']);
 				$result->execute();
+				#echo $result->error.$endl;
 				$result->close();
 			}
 
