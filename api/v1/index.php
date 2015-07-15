@@ -49,7 +49,7 @@
         # -> output topics
         $result->bind_result($id, $name, $num);
 
-        $topics = array( 'topics' => array() );
+        $topics = array('topics' => array());
     	while($result->fetch())
     	{
             $topics["topics"][] = array(

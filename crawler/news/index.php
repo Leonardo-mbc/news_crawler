@@ -1,4 +1,5 @@
 <?php
+	$need_topic = true;
 	include "header.php";
 	include $loc."mysql/connect.php";
 	include $loc."lib/simple_html_dom.php";

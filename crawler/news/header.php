@@ -2,16 +2,18 @@
 	$loc = "/Users/Leonardo/Dropbox/prog/website/news/";
 	include $loc."crawler/function.php";
 
-	if(in_array($_GET["tpc"], array("h", "ir", "y", "w", "b", "p", "e", "s", "t", "po"))) {
-		$tpc = $_GET['tpc'];
-	} else {
-		if(in_array($_SERVER["argv"][1], array("h", "ir", "y", "w", "b", "p", "e", "s", "t", "po"))) $tpc = $_SERVER["argv"][1];
-			else die("tpc = ? (h, ir, y, w, b, p, e, s, t, po)");
+	if($need_topic) {
+		if(in_array($_GET["tpc"], array("h", "ir", "y", "w", "b", "p", "e", "s", "t", "po"))) {
+			$tpc = $_GET['tpc'];
+		} else {
+			if(in_array($_SERVER["argv"][1], array("h", "ir", "y", "w", "b", "p", "e", "s", "t", "po"))) $tpc = $_SERVER["argv"][1];
+				else die("tpc = ? (h, ir, y, w, b, p, e, s, t, po)");
+		}
+
+		$ned = "&ned=us";
+		if($tpc != "po") $tpc .= $ned;
 	}
-
-	$ned = "&ned=us";
-	if($tpc != "po") $tpc .= $ned;
-
+	
 	function next_check($page_html) {
 		return preg_match('/<td class="next">/', $page_html, $match);
 	}

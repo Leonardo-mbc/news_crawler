@@ -1,15 +1,15 @@
 <?php
 	if(function_exists('tidy_parse_string'))
 	{
-		$tidy = tidy_parse_string($page_html, array(), 'UTF8');
+		$tidy = tidy_parse_string($page_html["body"], array(), 'UTF8');
 		$tidy->cleanRepair();
-		$page_html = $tidy->value;
+		$page_html["body"] = $tidy->value;
 	}
-	
-	$readability = new Readability($page_html);
+
+	$readability = new Readability($page_html["body"]);
 	$readability->debug = false;
 	$readability->convertLinksToFootnotes = true;
-	
+
 	$result = $readability->init();
 	// does it look like we found what we wanted?
 	if($result)
