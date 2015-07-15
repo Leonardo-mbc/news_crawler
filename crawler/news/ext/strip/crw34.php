@@ -1,3 +1,3 @@
 <?php
-	$response->body = preg_replace("/Next：.*?<\/a>/", "", $response->body);
+    $response->body = preg_replace("/Next：.*?<\/a>/", "", $response->body);
 ?>

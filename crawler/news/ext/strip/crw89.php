@@ -1,3 +1,3 @@
 <?php
-	$response->body = preg_replace("/<title>.*?<\/title>/", "", $response->body);
+    $response->body = preg_replace("/<title>.*?<\/title>/", "", $response->body);
 ?>

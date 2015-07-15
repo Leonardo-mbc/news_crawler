@@ -1,6 +1,6 @@
 <html>
-	<head>
-	<script>
+    <head>
+    <script>
       window.fbAsyncInit = function() {
         FB.init({
           appId      : '800114756665927',
@@ -8,14 +8,14 @@
           version    : 'v2.0'
         });
         
-		FB.api(
-		    "/me/feed",
-		    function (response) {
-		      if (response && !response.error) {
-		        /* handle the result */
-		      }
-		    }
-		);
+        FB.api(
+            "/me/feed",
+            function (response) {
+              if (response && !response.error) {
+                /* handle the result */
+              }
+            }
+        );
       };
 
       (function(d, s, id){
@@ -26,13 +26,13 @@
          fjs.parentNode.insertBefore(js, fjs);
        }(document, 'script', 'facebook-jssdk'));
     </script>
-	</head>
-	<body>
-		<div
-		  class="fb-like"
-		  data-send="true"
-		  data-width="450"
-		  data-show-faces="true">
-		</div>
-	</body>
+    </head>
+    <body>
+        <div
+          class="fb-like"
+          data-send="true"
+          data-width="450"
+          data-show-faces="true">
+        </div>
+    </body>
 </html>
