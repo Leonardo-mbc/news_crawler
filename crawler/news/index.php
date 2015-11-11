@@ -5,6 +5,7 @@
     include $loc."lib/simple_html_dom.php";
     include $loc."lib/unescape.php";
     require_once $loc."lib/rss_fetch.inc";
+    $db->select_db("news_datasets");
 
     $url = "https://news.google.com/news?hl=ja&ie=UTF-8&oe=UTF-8&output=rss&num=100&topic=$tpc";
     $curl_result = curl_get($url);

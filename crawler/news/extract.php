@@ -10,6 +10,7 @@
             include $loc."mysql/connect.php";
             include $loc."lib/simple_html_dom.php";
             require_once $loc."lib/readability.php";
+            $db->select_db("news_datasets");
 
             $result = $db->prepare("SELECT news.id, news.url, crawlers.id, crawlers.method, crawlers.strip FROM news LEFT JOIN crawlers ON news.host = crawlers.host WHERE ? <= news.updated_at AND news.body_crawled = FALSE LIMIT 50");
             $result->bind_param('s', date("Y-m-d"));

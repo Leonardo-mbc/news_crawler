@@ -8,27 +8,28 @@
             include "function.php";
             include "object.php";
             include $loc."mysql/connect.php";
-            
+            $db->select_db("news_datasets");
+
             $GLOBALS['logger'] = "enable";
-            
+
             $tpc = "dj7C0p7QkS6_EHM";
-            
+
             $result = $db->prepare("SELECT news.name, news.url FROM news WHERE news.topic_id = ?");
             $result->bind_param('s', $tpc);
             $result->execute();
             $result->bind_result($title, $url);
-            
+
             while($result->fetch()) $articles[] = new News($title, $url);
             $result->close();
-            
+
             foreach($articles as $key => $article)
             {
                 include "extract_url.php";
                 include "ext/morph.php";
-                
+
                 die("!!! STOP !!!");
             }
-            
+
         ?>
     </body>
 </html>
