@@ -35,6 +35,7 @@
         $result = $db->prepare("INSERT IGNORE INTO topics (id, name, url) VALUES(?, ?, ?)");
         $result->bind_param('sss', $topic_id, $item["title"], $more);
         $result->execute();
+        #echo $result->error.$endl;
         $result->close();
 
         $start = 0;

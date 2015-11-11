@@ -20,8 +20,7 @@
     $result->execute();
     $result->bind_result($id, $name, $num);
 
-    while($result->fetch())
-    {
+    while($result->fetch()) {
         echo "<a href='news.php?id=$id'>$name</a> $num<br/>";
     }
 
