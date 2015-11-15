@@ -1,6 +1,8 @@
 <?php
-    $loc = "/Users/Leonardo/Dropbox/prog/website/news/";
+    $loc = "/home/leonardo/services/news/";
     include $loc."crawler/function.php";
+    include $loc."mysql/connect.php";
+    $db->select_db("news_datasets");
 
     if($need_topic) {
         if(in_array($_GET["tpc"], array("h", "ir", "y", "w", "b", "p", "e", "s", "t", "po"))) {
@@ -13,7 +15,7 @@
         $ned = "&ned=us";
         if($tpc != "po") $tpc .= $ned;
     }
-    
+
     function next_check($page_html) {
         return preg_match('/<td class="next">/', $page_html, $match);
     }
@@ -36,9 +38,5 @@
         } else {
             return $line."<br/>\n".$text."<br/>\n".$line."<br/>\n";
         }
-    }
-
-    function logger($text) {
-        if($GLOBALS['logger'] == "enable") echo '<p style="color:gray">'.$text.'</p>';
     }
 ?>

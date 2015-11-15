@@ -6,8 +6,7 @@
         "ERROR.001 (PAGE DOWNLOAD ERROR)"
     );
 
-    function curl_get($url, $timeout = 300)
-    {
+    function curl_get($url, $timeout = 300) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HEADER, false);
@@ -22,5 +21,9 @@
             'http_code' => (int)$header['http_code'],
             'body' => $result
         );
+    }
+
+    function logger($text) {
+        if($GLOBALS['logger'] == "enable") echo '<p style="color:gray">'.$text.'</p>';
     }
 ?>
