@@ -64,19 +64,20 @@
             );
         }
     } else {
-        $result = $db->prepare("SELECT topics.id, topics.name, count(news.topic_id) FROM topics, news WHERE topics.id = news.topic_id AND substring(news.updated_at, 1, 7) = ? GROUP BY topics.id ORDER BY topics.updated_at $ORDER LIMIT ?, ?");
+        $result = $db->prepare("SELECT topics.id, topics.name, topics.updated_at, count(news.topic_id) FROM topics, news WHERE topics.id = news.topic_id AND substring(news.updated_at, 1, 7) = ? GROUP BY topics.id ORDER BY topics.updated_at $ORDER LIMIT ?, ?");
         $result->bind_param('sii', $DATE, $START, $LIMIT);
         $result->execute();
         echo $result->error.$endl;
 
         # -> output topics
-        $result->bind_result($id, $name, $num);
+        $result->bind_result($id, $name, $updated_at, $num);
 
         $topics = array('topics' => array());
         while($result->fetch()) {
             $topics["topics"][] = array(
                 'id' => $id,
                 'title' => $name,
+                'updated_at' => $updated_at,
                 'quant' => $num
             );
         }
