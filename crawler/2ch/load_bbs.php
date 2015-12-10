@@ -1,4 +1,6 @@
 <?php
+    include "header.php";
+
     $result = $db->prepare("SELECT name, url FROM bbs");
     $result->execute();
     $result->bind_result($name, $url);
@@ -23,14 +25,20 @@
         }
     }
 
+    $process = "insert";
     foreach($res as $link) {
         $name = $link[1];
         $url = $link[0];
         preg_match('{(2ch.net|bbspink.com|machi.to|2ch.sc)/(.*)/$}', $url, $ch);
-        if($bbs[$name] != $url) {
-            #echo $name." ".$url."<br/>";
-            #$result = $db->prepare("INSERT INTO bbs (url, name) VALUES (?, ?)");
 
+        if($process == "insert") {
+            echo "###### INSERT ######\n";
+            $result = $db->prepare("INSERT INTO bbs (url, name) VALUES (?, ?)");
+            $result->bind_param('ss', $url, $name);
+            $result->execute();
+            $result->close();
+        } else if($process == "update") {
+            echo "###### UPDATE ######\n";
             $result = $db->prepare("UPDATE bbs SET url = '?' WHERE name = '?' LIMIT 1");
             $result->bind_param('ss', $url, $name);
             $result->execute();

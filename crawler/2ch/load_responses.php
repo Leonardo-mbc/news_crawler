@@ -1,6 +1,22 @@
 <?php
-    $bbs_id = 1826;
-    $thread_id = 1447590610;
+    include "header.php";
+
+    if($_GET["bbs_id"]) {
+        $bbs_id = (int)$_GET['bbs_id'];
+    } else {
+        if($_SERVER["argv"][1]) $bbs_id = (int)$_SERVER["argv"][1];
+            else die("bbs_id = ?");
+    }
+
+    if($_GET["thread_id"]) {
+        $thread_id = (int)$_GET['thread_id'];
+    } else {
+        if($_SERVER["argv"][2]) $thread_id = (int)$_SERVER["argv"][2];
+            else die("thread_id = ?");
+    }
+
+    echo "bbs_id: ".$bbs_id.PHP_EOL;
+    echo "thread_id: ".$thread_id.PHP_EOL;
 
     $result = $db->prepare("SELECT url FROM bbs WHERE id = ? LIMIT 1");
     $result->bind_param('i', $bbs_id);
@@ -19,8 +35,9 @@
 
     if(preg_match("/machi\.to/", $bbs_url)) {
         $bbs_type = "machi.to";
-        $header[] = 'GET /bbs/offlaw.cgi'.$ita.$thread_id.' HTTP/1.1';
-        curl_setopt($ch, CURLOPT_URL, $saba.'/bbs/offlaw.cgi'.$ita.$thread_id);
+        $saba = "www.machi.to";
+        $header[] = 'GET /bbs/offlaw.cgi/2'.$ita.$thread_id.' HTTP/1.1';
+        curl_setopt($ch, CURLOPT_URL, $saba.'/bbs/offlaw.cgi/2'.$ita.$thread_id);
     } else if(preg_match("/2ch\.sc/", $bbs_url)) {
         $bbs_type = "2ch.sc";
         $header[] = 'GET '.$ita.'dat/'.$sure.' HTTP/1.1';
@@ -51,7 +68,6 @@
     curl_close($ch);
 
     var_dump($header);
-    var_dump($code);
 
     $res_count = 0;
 
@@ -76,7 +92,10 @@
                     $res = explode('<>', $line);
 
                     $sep_ofs = 0;
-                    if($bbs_type == "machi.to") $sep_ofs = 1;
+                    if($bbs_type == "machi.to") {
+                        $sep_ofs = 1;
+                        $res_count = $res[0];
+                    }
 
                     $name = $res[$sep_ofs + 0];
                     $mail = $res[$sep_ofs + 1];

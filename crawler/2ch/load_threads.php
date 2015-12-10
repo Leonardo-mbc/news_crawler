@@ -1,5 +1,14 @@
 <?php
-    $bbs_id = 1004;
+    include "header.php";
+
+    if($_GET["bbs_id"]) {
+        $bbs_id = (int)$_GET['bbs_id'];
+    } else {
+        if($_SERVER["argv"][1]) $bbs_id = (int)$_SERVER["argv"][1];
+            else die("bbs_id = ?");
+    }
+
+    echo "bbs_id: ".$bbs_id.PHP_EOL;
 
     $result = $db->prepare("SELECT url FROM bbs WHERE id = ? LIMIT 1");
     $result->bind_param('i', $bbs_id);
