@@ -13,7 +13,7 @@
 
     $START = ($PAGE - 1) * $LIMIT;
 
-    $result = $db->prepare("SELECT id, topic_id, name, source, url, host, body, updated_at FROM news WHERE ? < updated_at ORDER BY updated_at AND 20 < body_length DESC LIMIT ?, ?");
+    $result = $db->prepare("SELECT id, topic_id, name, source, url, host, body, updated_at FROM news WHERE ? < updated_at AND 20 < body_length ORDER BY updated_at DESC LIMIT ?, ?");
     $result->bind_param('sii', $DATE, $START, $LIMIT);
     $result->execute();
 
