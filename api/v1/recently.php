@@ -13,12 +13,12 @@
 
     $START = ($PAGE - 1) * $LIMIT;
 
-    $result = $db->prepare("SELECT id, topic_id, name, source, url, host, body, updated_at FROM news WHERE ? < updated_at AND 20 < body_length ORDER BY updated_at DESC LIMIT ?, ?");
+    $result = $db->prepare("SELECT id, topic_id, name, source, url, host, body, updated_at, created_at FROM news WHERE ? < created_at AND 20 < body_length ORDER BY created_at DESC LIMIT ?, ?");
     $result->bind_param('sii', $DATE, $START, $LIMIT);
     $result->execute();
 
     # -> output news
-    $result->bind_result($id, $topic_id, $name, $source, $url, $host, $body, $updated_at);
+    $result->bind_result($id, $topic_id, $name, $source, $url, $host, $body, $updated_at, $created_at);
 
     $topics = array('news' => array());
     while($result->fetch()) {
@@ -30,7 +30,8 @@
             'url' => $url,
             'host' => $host,
             'body' => $body,
-            'updated_at' => $updated_at
+            'updated_at' => $updated_at,
+            'created_at' => $created_at
         );
     }
 

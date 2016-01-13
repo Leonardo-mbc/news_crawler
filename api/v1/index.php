@@ -20,12 +20,12 @@
     if($_GET['topic_id']) {
         $topic = htmlspecialchars($_GET['topic_id'], ENT_QUOTES, "utf-8");
 
-        $result = $db->prepare("SELECT id, topic_id, name, source, url, host, body, updated_at FROM news WHERE topic_id = ? AND substring(updated_at, 1, 7) = ? ORDER BY updated_at $ORDER LIMIT ?, ?");
+        $result = $db->prepare("SELECT id, topic_id, name, source, url, host, body, updated_at, created_at FROM news WHERE topic_id = ? AND substring(created_at, 1, 7) = ? ORDER BY created_at $ORDER LIMIT ?, ?");
         $result->bind_param('ssii', $topic, $DATE, $START, $LIMIT);
         $result->execute();
 
         # -> output news
-        $result->bind_result($id, $topic_id, $name, $source, $url, $host, $body, $updated_at);
+        $result->bind_result($id, $topic_id, $name, $source, $url, $host, $body, $updated_at, $created_at);
 
         $topics = array('news' => array());
         while($result->fetch()) {
@@ -37,18 +37,19 @@
                 'url' => $url,
                 'host' => $host,
                 'body' => $body,
-                'updated_at' => $updated_at
+                'updated_at' => $updated_at,
+                'created_at' => $created_at
             );
         }
     } else if($_GET['news_id']) {
         $news = htmlspecialchars($_GET['news_id'], ENT_QUOTES, "utf-8");
 
-        $result = $db->prepare("SELECT id, topic_id, name, source, url, host, body, updated_at FROM news WHERE id = ? LIMIT 1");
+        $result = $db->prepare("SELECT id, topic_id, name, source, url, host, body, updated_at, created_at FROM news WHERE id = ? LIMIT 1");
         $result->bind_param('i', $news);
         $result->execute();
 
         # -> output news
-        $result->bind_result($id, $topic_id, $name, $source, $url, $host, $body, $updated_at);
+        $result->bind_result($id, $topic_id, $name, $source, $url, $host, $body, $updated_at, $created_at);
 
         $topics = array('news' => array());
         while($result->fetch()) {
@@ -60,17 +61,18 @@
                 'url' => $url,
                 'host' => $host,
                 'body' => $body,
-                'updated_at' => $updated_at
+                'updated_at' => $updated_at,
+                'created_at' => $created_at
             );
         }
     } else {
-        $result = $db->prepare("SELECT topics.id, topics.name, topics.updated_at, count(news.topic_id) FROM topics, news WHERE topics.id = news.topic_id AND substring(news.updated_at, 1, 7) = ? GROUP BY topics.id ORDER BY topics.updated_at $ORDER LIMIT ?, ?");
+        $result = $db->prepare("SELECT topics.id, topics.name, topics.updated_at, topics.created_at, count(news.topic_id) FROM topics, news WHERE topics.id = news.topic_id AND substring(news.created_at, 1, 7) = ? GROUP BY topics.id ORDER BY topics.created_at $ORDER LIMIT ?, ?");
         $result->bind_param('sii', $DATE, $START, $LIMIT);
         $result->execute();
         echo $result->error.$endl;
 
         # -> output topics
-        $result->bind_result($id, $name, $updated_at, $num);
+        $result->bind_result($id, $name, $updated_at, $created_at, $num);
 
         $topics = array('topics' => array());
         while($result->fetch()) {
@@ -78,6 +80,7 @@
                 'id' => $id,
                 'title' => $name,
                 'updated_at' => $updated_at,
+                'created_at' => $created_at,
                 'quant' => $num
             );
         }
