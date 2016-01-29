@@ -54,9 +54,9 @@
         while($result->fetch()) $source_id = $src_id;
         $result->close();
 
-        $published_at = $thread["datetime"]->format('Y-m-d H:i:sP');
-        $result = $db->prepare("INSERT IGNORE INTO threads (name, source_id, url, published_at) VALUES(?, ?, ?, ?)");
-        $result->bind_param('siss', $thread["title"], $source_id, $thread["link"], $published_at);
+        $published_at = $thread["datetime"]->format('Y-m-d H:i:s');
+        $result = $db->prepare("INSERT INTO threads (name, source_id, url, published_at) SELECT ?, ?, ?, ? FROM dual WHERE NOT EXISTS (SELECT id FROM threads WHERE name = ? AND url = ?)");
+        $result->bind_param('sissss', $thread["title"], $source_id, $thread["link"], $published_at, $thread["title"], $thread["link"]);
         $result->execute();
         $result->close();
     }
