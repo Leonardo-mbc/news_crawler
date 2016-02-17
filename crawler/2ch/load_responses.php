@@ -102,7 +102,7 @@
                     $details = $res[$sep_ofs + 2];
                     $body = $res[$sep_ofs + 3];
 
-                    $result = $db->prepare("INSERT INTO responses (id, thread_id, name, mail, body, details) VALUES(?, ?, ?, ?, ?, ?)");
+                    $result = $db->prepare("INSERT INTO responses (id, thread_id, name, mail, details, body) VALUES(?, ?, ?, ?, ?, ?)");
                     $result->bind_param('iissss', $res_count, $thread_id, $name, $mail, $details, $body);
                     $result->execute();
                     $result->close();
