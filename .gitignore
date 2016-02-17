@@ -1,4 +1,5 @@
-
+.gitignore
 mysql/connect.php
 .remote-sync.json
 SQL.txt
+crawler/2ch/dat
